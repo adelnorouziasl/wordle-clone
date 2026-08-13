@@ -1,4 +1,7 @@
+
 # Wordle Clone
+
+🟩 **[Play it here](https://adelnorouziasl.github.io/wordle-clone)**
 
 A Wordle-inspired word guessing game built with vanilla HTML, CSS, and JavaScript.
 
