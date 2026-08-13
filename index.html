@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WordGame!</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<header>
+    <h1>WordGame! <a href="rules.html" class="info-link">ⓘ</a></h1>
+</header>
+
+<div class="game">
+    <div id="board">
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+        <div class="row">
+            <div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div>
+        </div>
+    </div>
+
+    <div id="keyboard">
+        <div class="keyrow">
+            <div class="key" id="key-Q">Q</div>
+            <div class="key" id="key-W">W</div>
+            <div class="key" id="key-E">E</div>
+            <div class="key" id="key-R">R</div>
+            <div class="key" id="key-T">T</div>
+            <div class="key" id="key-Y">Y</div>
+            <div class="key" id="key-U">U</div>
+            <div class="key" id="key-I">I</div>
+            <div class="key" id="key-O">O</div>
+            <div class="key" id="key-P">P</div>
+        </div>
+
+        <div class="keyrow">
+            <div class="key" id="key-A">A</div>
+            <div class="key" id="key-S">S</div>
+            <div class="key" id="key-D">D</div>
+            <div class="key" id="key-F">F</div>
+            <div class="key" id="key-G">G</div>
+            <div class="key" id="key-H">H</div>
+            <div class="key" id="key-J">J</div>
+            <div class="key" id="key-K">K</div>
+            <div class="key" id="key-L">L</div>
+        </div>
+
+        <div class="keyrow">
+            <div class="key wide" data-key="ENTER">ENTER</div>
+            <div class="key" id="key-Z">Z</div>
+            <div class="key" id="key-X">X</div>
+            <div class="key" id="key-C">C</div>
+            <div class="key" id="key-V">V</div>
+            <div class="key" id="key-B">B</div>
+            <div class="key" id="key-N">N</div>
+            <div class="key" id="key-M">M</div>
+            <div class="key wide" data-key="DELETE">⌫</div>
+        </div>
+    </div>
+</div>
+
+<script src="words-answers.js"></script>
+<script src="words-guesses.js"></script>
+<script src="index.js"></script>
+</body>
+</html>

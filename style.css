@@ -1,0 +1,286 @@
+body {
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* CENTER THE TITLE */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-bottom: 1.5px solid black;   /* ← your missing line */
+    padding-bottom: 10px;             /* gives breathing room */
+    margin-bottom: 20px;              /* space between header and board */
+}
+
+
+
+header h1 {
+    
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 30px auto;
+    padding: 0;
+
+}
+
+.info-link {
+    font-size: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgba(84, 19, 213, 0.826);
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+
+/* GAME BOARD */
+.box {
+    width: 55px;
+    height: 55px;
+    border: 2px solid black;
+    margin: 2px;
+
+    /* CENTER LETTERS */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.row {
+    display: flex;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 65vh;
+}
+
+/* KEYBOARD */
+.key {
+    width: 40px;
+    height: 50px;
+    border: 2px solid black;
+    margin: 1.8px;
+    border-radius: 8px;
+    background-color: rgba(204, 205, 205, 0.929);
+
+    /* CENTER KEY TEXT */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+    font-size: 18px;
+    cursor: pointer;
+    
+}
+
+
+
+.key.wide {
+    width: 75px;
+}
+
+.keyrow {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2.5px;
+}
+
+#board {
+    margin-top: 40px;
+}
+
+#keyboard {
+    margin-top: 45px;   /* move keyboard down */
+}
+
+/*---------------- Starting game logic css-----------------*/
+
+.green {
+    background-color: rgb(32, 171, 32);
+    color: white;
+}
+
+.orange {
+    background-color: rgb(255, 211, 0);
+    color: white;
+}
+
+.gray {
+    background-color: gray;
+    color: white;
+}
+
+.diagonal {
+    background: linear-gradient(
+        135deg,
+        rgb(32, 171, 32) 50%,
+        rgb(255, 211, 0) 50%
+    );
+    color: white;
+}
+
+.key.diagonal {
+    background: linear-gradient(
+        135deg,
+        rgb(32, 171, 32) 50%,
+        rgb(255, 211, 0) 50%
+    );
+    color: white;
+}
+
+/* --- ANIMATIONS --- */
+
+/* Smooth out the color transition */
+.box {
+    transition: background-color 0.1s, border-color 0.1s;
+}
+
+/* The flip class we will trigger in JavaScript */
+.flip {
+    animation: flipIn 0.8s ease forwards;
+}
+
+/* 3D Flip Keyframes */
+@keyframes flipIn {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(90deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+/* The Pop Animation */
+.pop {
+    animation: popIn 0.1s ease-in-out;
+}
+
+@keyframes popIn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); border-color: dimgray; }
+    100% { transform: scale(1); }
+}
+
+/* The Error Shake */
+.shake {
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+
+
+
+
+#modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#modal {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    font-family: Verdana, sans-serif;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+#modal-message {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#modal-btn {
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: rgb(32, 171, 32);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#modal-btn:hover {
+    background-color: rgb(25, 140, 25);
+}
+
+.bounce {
+    animation: bounce 0.6s ease forwards;
+}
+
+@keyframes bounce {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-20px); }
+    60%  { transform: translateY(-10px); }
+    80%  { transform: translateY(-15px); }
+    100% { transform: translateY(0); }
+}
+
+@media (max-width: 420px) {
+    .box {
+        width: 13vw;
+        height: 13vw;
+        font-size: 6vw;
+        margin: 1px;
+    }
+
+    .key {
+        width: 8.5vw;
+        height: 11vw;
+        font-size: 3.5vw;
+        margin: 1px;
+        border-radius: 6px;
+    }
+
+    .key.wide {
+        width: 13vw;
+        font-size: 3vw;
+    }
+
+    #keyboard {
+        margin-top: 20px;
+    }
+
+    #board {
+        margin-top: 10px;
+    }
+
+    .game {
+        height: auto;
+        padding: 10px 0;
+    }
+
+    header h1 {
+        font-size: 24px;
+        margin: 15px auto;
+    }
+}
