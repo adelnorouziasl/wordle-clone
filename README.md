@@ -4,6 +4,7 @@
 🟩 **[Play it here](https://adelnorouziasl.github.io/wordle-clone)**
 
 A Wordle-inspired word guessing game built with vanilla HTML, CSS, and JavaScript.
+![WordGame](screenshot.png)
 
 ## How to Play
 - Guess the 5-letter word in 6 tries
