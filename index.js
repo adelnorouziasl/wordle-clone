@@ -7,19 +7,89 @@ let validWordsSet;
 
 const board = Array.from(document.querySelectorAll("#board .row"));
 
+
+// ===== DARK MODE =====
+const darkModeToggle = document.getElementById("dark-mode-toggle");
+
+// Check memory to see if they were already in dark mode
+if (localStorage.getItem("wordGameTheme") === "dark") {
+    document.body.classList.add("dark-mode");
+}
+
+// Toggle it when clicked
+darkModeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+    
+    // Save their preference to local storage
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("wordGameTheme", "dark");
+    } else {
+        localStorage.setItem("wordGameTheme", "light");
+    }
+    
+    // Remove focus from the button so pressing Enter doesn't trigger it again
+    darkModeToggle.blur();
+});
+
+// ===== TOAST NOTIFICATIONS =====
+function showToast(message) {
+    const toastContainer = document.getElementById("toast-container");
+    const toast = document.createElement("div");
+    toast.classList.add("toast");
+    toast.textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    // Fade out after 1.5 seconds
+    setTimeout(() => {
+        toast.classList.add("fade-out");
+    }, 1500);
+
+    // Completely remove from HTML after 1.8 seconds
+    setTimeout(() => {
+        toast.remove();
+    }, 1800);
+}
+
 // ===== MODAL =====
+// ===== SHOW MODAL (GAME OVER SCREEN) =====
 function showModal(message) {
-    localStorage.clear();
+    // Create the blurred background
     const overlay = document.createElement("div");
     overlay.id = "modal-overlay";
 
+    // Create the main box
     const modal = document.createElement("div");
     modal.id = "modal";
-    modal.innerHTML = `
-        <p id="modal-message">${message}</p>
-        <button id="modal-btn" onclick="location.reload()">Play Again</button>
-    `;
 
+    // Create the message text
+    const text = document.createElement("div");
+    text.id = "modal-message";
+    text.innerHTML = message;
+
+    // Create the Play Again button
+    const btn = document.createElement("button");
+    btn.id = "modal-btn";
+    btn.textContent = "Play Again";
+
+    // When clicked, reload the page cleanly
+    // When clicked, reload the page cleanly
+    btn.addEventListener("click", () => {
+        // Nuke ONLY the active game data, keep stats and theme safe!
+        localStorage.removeItem("wg_word");
+        localStorage.removeItem("wg_row");
+        localStorage.removeItem("wg_col");
+        localStorage.removeItem("wg_board");
+        localStorage.removeItem("wg_keys");
+        localStorage.removeItem("wg_over");
+        
+        // Reload the page to a perfectly blank board
+        window.location.reload();
+    });
+
+    // Put it all together and inject into the HTML
+    modal.appendChild(text);
+    modal.appendChild(btn);
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 }
@@ -210,111 +280,127 @@ function updateStats(won) {
 
 // ===== SUBMIT GUESS =====
 function submitGuess() {
-    if (gameOver) return;
-    if (currentCol !== 5) {
-        triggerShake();
+    // 1. Check if they typed 5 letters
+    if (currentCol < 5) {
+        showToast("Not enough letters");
+        const row = document.querySelectorAll(".row")[currentRow];
+        row.classList.remove("shake");
+        void row.offsetWidth; // Trigger reflow so animation restarts
+        row.classList.add("shake");
         return;
     }
 
+    // 2. Build the word from the board
     let guess = "";
+    const rowBoxes = document.querySelectorAll(".row")[currentRow].querySelectorAll(".box");
     for (let i = 0; i < 5; i++) {
-        guess += board[currentRow].children[i].textContent;
+        guess += rowBoxes[i].textContent;
     }
 
-    // ===== WORD VALIDATION =====
+    // 3. Check if it's a real word in our dictionary Set
     if (!validWordsSet.has(guess)) {
-        triggerShake();
+        showToast("Not in word list");
+        const row = document.querySelectorAll(".row")[currentRow];
+        row.classList.remove("shake");
+        void row.offsetWidth; 
+        row.classList.add("shake");
         return;
     }
 
+    // 4. Setup logic for checking the guess
     const secretWord = atob(encryptedWord);
-
-    // ===== FREQUENCY MAP =====
-    const freq = {};
-    for (let char of secretWord) {
-        freq[char] = (freq[char] || 0) + 1;
+    let guessArray = guess.split("");
+    let secretArray = secretWord.split("");
+    let boxColors = ["gray", "gray", "gray", "gray", "gray"];
+    
+    // Count how many of each letter exist in the secret word
+    let secretLetterCounts = {};
+    for (let letter of secretArray) {
+        secretLetterCounts[letter] = (secretLetterCounts[letter] || 0) + 1;
     }
 
-    const results = ["gray", "gray", "gray", "gray", "gray"];
-
-    // ===== FIRST PASS: GREENS =====
+    // 5. PASS 1: Find all exact matches (Greens)
     for (let i = 0; i < 5; i++) {
-        if (guess[i] === secretWord[i]) {
-            results[i] = "green";
-            freq[guess[i]]--;
+        if (guessArray[i] === secretArray[i]) {
+            boxColors[i] = "green";
+            secretLetterCounts[guessArray[i]] -= 1;
         }
     }
 
-    // ===== SECOND PASS: ORANGE + GRAY =====
+    // 6. PASS 2: Find Yellows & trigger Custom Diagonal Mechanic
     for (let i = 0; i < 5; i++) {
-        if (results[i] === "green") continue;
-        if (freq[guess[i]] > 0) {
-            results[i] = "orange";
-            freq[guess[i]]--;
+        let letter = guessArray[i];
+
+        if (boxColors[i] === "green") {
+            // CUSTOM MECHANIC: It's green, but are there MORE of this letter hidden?
+            if (secretLetterCounts[letter] > 0) {
+                boxColors[i] = "diagonal"; // Turns half-green/half-yellow!
+                secretLetterCounts[letter] -= 1; 
+            }
+        } else if (secretLetterCounts[letter] > 0) {
+            // Letter is in the word, but wrong spot
+            boxColors[i] = "orange"; 
+            secretLetterCounts[letter] -= 1;
         }
     }
 
-    // ===== DIAGONAL RULE =====
+    // 7. Apply 3D Flips and Colors (Staggered Animations)
     for (let i = 0; i < 5; i++) {
-        if (results[i] !== "green") continue;
-
-        let greenCount = 0;
-        for (let j = 0; j < 5; j++) {
-            if (guess[j] === guess[i] && results[j] === "green") greenCount++;
-        }
-
-        const secretCount = secretWord.split("").filter(l => l === guess[i]).length;
-        if (secretCount > greenCount) results[i] = "diagonal";
-    }
-
-    const isWin = results.every(r => r === "green");
-    const isLastRow = currentRow === 5;
-
-    // ===== APPLY ANIMATIONS AND COLORS =====
-    for (let i = 0; i < 5; i++) {
-        const box = board[currentRow].children[i];
-        const letter = guess[i];
-        const colorClass = results[i];
-
         setTimeout(() => {
+            let box = rowBoxes[i];
             box.classList.add("flip");
-            setTimeout(() => {
-                box.classList.add(colorClass);
-                box.style.borderColor = "transparent";
-                colorKey(letter, colorClass);
+            box.classList.add(boxColors[i]);
 
-                // Save after the last tile finishes animating
-                if (i === 4) saveState();
-
-            }, 400);
-        }, i * 200);
+            // Update Keyboard Colors (Never downgrade a color)
+            let key = document.getElementById("key-" + guessArray[i]);
+            if (key) {
+                if (boxColors[i] === "diagonal") {
+                    key.className = "key diagonal"; // Highest priority
+                } else if (boxColors[i] === "green" && !key.classList.contains("diagonal")) {
+                    key.className = "key green";
+                } else if (boxColors[i] === "orange" && !key.classList.contains("green") && !key.classList.contains("diagonal")) {
+                    key.className = "key orange";
+                } else if (boxColors[i] === "gray" && !key.classList.contains("green") && !key.classList.contains("orange") && !key.classList.contains("diagonal")) {
+                    key.className = "key gray";
+                }
+            }
+        }, i * 300); // 300ms delay between each letter flipping
     }
 
-    const animationDuration = 5 * 200 + 400;
+    // 8. Check for Win/Loss (Wait for animations to finish!)
+    const isWin = (guess === secretWord);
+    const isLastRow = (currentRow === 5);
+    
+    const animationDuration = 1600; 
 
+    // We merged your stats UI directly into the animation timeout!
+    setTimeout(() => {
+        if (isWin) {
+            gameOver = true;
+            localStorage.removeItem("wg_word"); // Wipe memory on win
+            const stats = updateStats(true);           // Update stats before showing
+            triggerWinAnimation(currentRow-1);           // Pop the win animation
+
+            showModal(`
+                🎉 Nice job!<br><br>
+                <div style="display:flex; justify-content:center; gap:24px; font-size:14px;">
+                    <div><div style="font-size:22px; font-weight:bold;">${stats.played}</div>Played</div>
+                    <div><div style="font-size:22px; font-weight:bold;">${stats.wins}</div>Wins</div>
+                    <div><div style="font-size:22px; font-weight:bold;">${stats.streak}</div>Streak</div>
+                    <div><div style="font-size:22px; font-weight:bold;">${stats.maxStreak}</div>Best</div>
+                </div>
+            `); 
+        } else if (isLastRow) {
+            gameOver = true;
+            localStorage.removeItem("wg_word");
+            updateStats(false);
+            showModal(`The word was <strong>${secretWord}</strong>`);
+        }
+    }, animationDuration + 100);
+
+    // 9. Move to next row
     currentRow++;
     currentCol = 0;
-
-    if (isWin) {
-    gameOver = true;
-    const stats = updateStats(true);
-    setTimeout(() => {
-        triggerWinAnimation(currentRow - 1);
-    }, animationDuration);
-    setTimeout(() => showModal(`
-        🎉 Nice job!<br><br>
-        <div style="display:flex; justify-content:center; gap:24px; font-size:14px;">
-            <div><div style="font-size:22px; font-weight:bold;">${stats.played}</div>Played</div>
-            <div><div style="font-size:22px; font-weight:bold;">${stats.wins}</div>Wins</div>
-            <div><div style="font-size:22px; font-weight:bold;">${stats.streak}</div>Streak</div>
-            <div><div style="font-size:22px; font-weight:bold;">${stats.maxStreak}</div>Best</div>
-        </div>
-    `), animationDuration + 300);
-} else if (isLastRow) {
-    gameOver = true;
-    updateStats(false);
-    setTimeout(() => showModal(`The word was <strong>${secretWord}</strong>`), animationDuration + 300);
-}
 }
 
 // ===== SHAKE =====

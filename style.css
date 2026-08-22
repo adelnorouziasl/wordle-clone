@@ -1,242 +1,321 @@
+
+:root {
+    --bg-color: #ffffff;
+    --text-color: #111111;
+    --border-light: #d3d6da;
+    --border-dark: #878a8c;
+    --key-bg: #e3e3e1;
+    --key-text: #111111;
+    --modal-bg: #ffffff;
+    
+    /* Game Colors */
+    --color-green: #6aaa64;
+    --color-yellow: #c9b458;
+    --color-gray: #787c7e;
+}
+
+/* Dark Mode Variables - Triggers when 'dark-mode' class is on body */
+body.dark-mode {
+    --bg-color: #121213;
+    --text-color: #ffffff;
+    --border-light: #3a3a3c;
+    --border-dark: #565758;
+    --key-bg: #818384;
+    --key-text: #ffffff;
+    --modal-bg: #1a1a1b;
+}
+
+/* =========================================
+   2. GLOBAL STYLES
+   ========================================= */
 body {
-    background-color: white;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Open Sans', Arial, sans-serif;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* CENTER THE TITLE */
+/* =========================================
+   3. HEADER
+   ========================================= */
 header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    position: relative;
-    border-bottom: 1.5px solid black;   /* ← your missing line */
-    padding-bottom: 10px;             /* gives breathing room */
-    margin-bottom: 20px;              /* space between header and board */
+    border-bottom: 1px solid var(--border-light);
+    padding: 10px 20px;
+    margin-bottom: 60px;
 }
 
-
-
 header h1 {
-    
-    width: 100%;
-    text-align: center;
     font-size: 32px;
-    font-weight: bold;
-    margin: 30px auto;
-    padding: 0;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 2px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
+.header-icons {
+    margin-left: auto;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+#dark-mode-toggle {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
 }
 
 .info-link {
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 24px;
     text-decoration: none;
-    color: rgba(84, 19, 213, 0.826);
-    margin-left: 8px;
-    vertical-align: middle;
+    color:rgba(3, 15, 236, 0.916)
 }
 
-
-/* GAME BOARD */
-.box {
-    width: 55px;
-    height: 55px;
-    border: 2px solid black;
-    margin: 2px;
-
-    /* CENTER LETTERS */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.row {
-    display: flex;
-}
-
+/* =========================================
+   4. BOARD & BOXES
+   ========================================= */
 .game {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 65vh;
 }
 
-/* KEYBOARD */
-.key {
-    width: 40px;
-    height: 50px;
-    border: 2px solid black;
-    margin: 1.8px;
-    border-radius: 8px;
-    background-color: rgba(204, 205, 205, 0.929);
+.row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
 
-    /* CENTER KEY TEXT */
+.box {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--border-light);
     display: flex;
     justify-content: center;
     align-items: center;
-
-    font-weight: bold;
-    font-size: 18px;
-    cursor: pointer;
-    
+    font-size: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: background-color 0.1s, border-color 0.1s;
 }
 
+/* Give filled boxes a slightly darker border before they are submitted */
+.box.filled {
+    border-color: var(--border-dark);
+}
 
-
-.key.wide {
-    width: 75px;
+/* =========================================
+   5. KEYBOARD
+   ========================================= */
+#keyboard {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
 .keyrow {
     display: flex;
     justify-content: center;
-    margin-bottom: 2.5px;
+    gap: 6px;
 }
 
-#board {
-    margin-top: 40px;
+.key {
+    background-color: var(--key-bg);
+    color: var(--key-text);
+    border: none;
+    border-radius: 4px;
+    height: 58px;
+    width: 43px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
 }
 
-#keyboard {
-    margin-top: 45px;   /* move keyboard down */
+.key.wide {
+    width: 65px;
+    font-size: 12px;
 }
 
-/*---------------- Starting game logic css-----------------*/
-
+/* =========================================
+   6. GAME COLORS 
+   ========================================= */
 .green {
-    background-color: rgb(32, 171, 32);
-    color: white;
+    background-color: var(--color-green) !important;
+    color: white !important;
+    border-color: var(--color-green) !important;
 }
 
 .orange {
-    background-color: rgb(255, 211, 0);
-    color: white;
+    background-color: var(--color-yellow) !important;
+    color: white !important;
+    border-color: var(--color-yellow) !important;
 }
 
 .gray {
-    background-color: gray;
-    color: white;
+    background-color: var(--color-gray) !important;
+    color: white !important;
+    border-color: var(--color-gray) !important;
 }
 
 .diagonal {
-    background: linear-gradient(
-        135deg,
-        rgb(32, 171, 32) 50%,
-        rgb(255, 211, 0) 50%
-    );
-    color: white;
+    background: linear-gradient(135deg, var(--color-green) 50%, var(--color-yellow) 50%) !important;
+    color: white !important;
+    border-color: var(--color-green) !important;
 }
 
 .key.diagonal {
-    background: linear-gradient(
-        135deg,
-        rgb(32, 171, 32) 50%,
-        rgb(255, 211, 0) 50%
-    );
+    background: linear-gradient(135deg, var(--color-green) 50%, var(--color-yellow) 50%) !important;
+    color: white !important;
+}
+
+
+/* 🌙 DARK MODE gray tiles and keys - FORCED */
+body.dark-mode .box.gray, 
+body.dark-mode .key.gray {
+    background-color: #3a3a3c !important; 
+    border-color: #3a3a3c !important;
+    color: white !important;
+}
+
+/* =========================================
+   7. TOAST NOTIFICATIONS (Slick popup alerts)
+   ========================================= */
+#toast-container {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.toast.fade-out {
+    opacity: 0;
+}
+
+/* =========================================
+   8. MODAL POLISH (Modern UI)
+   ========================================= */
+#modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px); /* High-end glass effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    
+    /* Smooth fade in */
+    opacity: 0;
+    animation: fadeIn 0.3s forwards ease-out;
+}
+
+#modal {
+    background: var(--modal-bg);
+    color: var(--text-color);
+    border-radius: 16px; /* Rounder, modern corners */
+    padding: 40px 50px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-light);
+    
+    /* Smooth scale pop-in */
+    transform: scale(0.8);
+    animation: popUp 0.3s 0.1s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#modal-message {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
+
+#modal-btn {
+    padding: 14px 36px;
+    font-size: 18px;
+    font-weight: 700;
+    background-color: var(--color-green);
     color: white;
+    border: none;
+    border-radius: 30px; /* Pill-shaped modern button */
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+    box-shadow: 0 4px 15px rgba(106, 170, 100, 0.4);
 }
 
-/* --- ANIMATIONS --- */
-
-/* Smooth out the color transition */
-.box {
-    transition: background-color 0.1s, border-color 0.1s;
+#modal-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
 }
 
-/* The flip class we will trigger in JavaScript */
-.flip {
-    animation: flipIn 0.8s ease forwards;
+/* Modal Animations */
+@keyframes fadeIn {
+    to { opacity: 1; }
 }
 
-/* 3D Flip Keyframes */
+@keyframes popUp {
+    to { transform: scale(1); }
+}
+
+/* =========================================
+   9. ANIMATIONS
+   ========================================= */
+.flip { animation: flipIn 1.2s ease forwards; }
 @keyframes flipIn {
-    0% {
-        transform: rotateX(0deg);
-    }
-    50% {
-        transform: rotateX(90deg);
-    }
-    100% {
-        transform: rotateX(0deg);
-    }
+    0% { transform: rotateX(0deg); }
+    50% { transform: rotateX(90deg); }
+    100% { transform: rotateX(0deg); }
 }
 
-/* The Pop Animation */
-.pop {
-    animation: popIn 0.1s ease-in-out;
-}
-
+.pop { animation: popIn 0.1s ease-in-out; }
 @keyframes popIn {
     0% { transform: scale(1); }
-    50% { transform: scale(1.15); border-color: dimgray; }
+    50% { transform: scale(1.1); }
     100% { transform: scale(1); }
 }
 
-/* The Error Shake */
-.shake {
-    animation: shake 0.4s;
-}
-
+.shake { animation: shake 0.4s; }
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
     20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-
-
-
-
-#modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-#modal {
-    background: white;
-    border-radius: 12px;
-    padding: 40px;
-    text-align: center;
-    font-family: Verdana, sans-serif;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-}
-
-#modal-message {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-#modal-btn {
-    padding: 10px 28px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: rgb(32, 171, 32);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#modal-btn:hover {
-    background-color: rgb(25, 140, 25);
-}
-
-.bounce {
-    animation: bounce 0.6s ease forwards;
-}
-
+.bounce { animation: bounce 0.6s ease forwards; }
 @keyframes bounce {
     0%   { transform: translateY(0); }
     30%  { transform: translateY(-20px); }
@@ -245,42 +324,26 @@ header h1 {
     100% { transform: translateY(0); }
 }
 
-@media (max-width: 420px) {
+/* =========================================
+   10. MOBILE RESPONSIVENESS
+   ========================================= */
+@media (max-width: 500px) {
+    header h1 { font-size: 24px; }
+    
     .box {
-        width: 13vw;
-        height: 13vw;
-        font-size: 6vw;
-        margin: 1px;
+        width: 13.5vw;
+        height: 13.5vw;
+        font-size: 7vw;
     }
 
     .key {
-        width: 8.5vw;
-        height: 11vw;
-        font-size: 3.5vw;
-        margin: 1px;
-        border-radius: 6px;
+        height: 58px;
+        width: 8vw;
+        font-size: 12px;
     }
 
     .key.wide {
-        width: 13vw;
-        font-size: 3vw;
-    }
-
-    #keyboard {
-        margin-top: 20px;
-    }
-
-    #board {
-        margin-top: 10px;
-    }
-
-    .game {
-        height: auto;
-        padding: 10px 0;
-    }
-
-    header h1 {
-        font-size: 24px;
-        margin: 15px auto;
+        width: 14vw;
+        font-size: 11px;
     }
 }
