@@ -2,54 +2,157 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>WordGame!</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Adds a clean, modern font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700&display=swap" rel="stylesheet">
+    <title>WordGame! - How to Play</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(126, 95, 187, 0.826);
+            margin: 0;
+            padding: 20px 0 40px 0;
+        }
+
+        h4 {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+        }
+
+        .green {
+            background-color: rgb(32, 171, 32);
+            color: white;
+        }
+
+        .orange {
+            background-color: rgb(231, 193, 6);
+            color: white;
+        }
+
+        .gray {
+            background-color: gray;
+            color: white;
+        }
+
+        #rules .row {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        #rules p {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .rules-list {
+            font-size: larger;
+        }
+
+        .diagonal {
+            background: linear-gradient(
+                135deg,
+                rgb(32, 171, 32) 50%,   /* green */
+                rgb(231, 193, 6) 50%    /* orange */
+            );
+            color: white;
+        }
+
+        /* ===== CONTINUE BUTTON STYLES ===== */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        .play-btn {
+            display: inline-block;
+            padding: 14px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            background-color: #6aaa64;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, filter 0.2s;
+        }
+
+        .play-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
-
 <body>
+    
+    <div id="rules">
+        <h4><strong>  HOW TO PLAY  </strong> </h4>
 
-<header>
-    <h1>WordGame!</h1>
-    <div class="header-icons">
-        <button id="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
-        <a href="rules.html" class="info-link" title="How to play">ⓘ</a>
-    </div>
-</header>
+        <ul class="rules-list">
+            <li>Guess the word within 6 attempts.</li>
+            <li>Each guess must be a real 5‑letter word.</li>
+            <li>After each attempt, the tiles will change color depending on whether the letter is in the word.</li>
+        </ul>
+        <hr>
 
-<!-- Toast Notifications will pop up here -->
-<div id="toast-container"></div>
+        <p><em><strong>Examples</strong></em></p>
 
-<div class="game">
-    <div id="board">
-        <!-- Rows 1-6 -->
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-        <div class="row"><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div><div class="box"></div></div>
-    </div>
-
-    <div id="keyboard">
-        <div class="keyrow">
-            <div class="key" id="key-Q">Q</div><div class="key" id="key-W">W</div><div class="key" id="key-E">E</div><div class="key" id="key-R">R</div><div class="key" id="key-T">T</div><div class="key" id="key-Y">Y</div><div class="key" id="key-U">U</div><div class="key" id="key-I">I</div><div class="key" id="key-O">O</div><div class="key" id="key-P">P</div>
+        <div class="row">
+            <div class="box">C</div>
+            <div class="box green">L</div>
+            <div class="box">O</div>
+            <div class="box">U</div>
+            <div class="box">D</div>
         </div>
-        <div class="keyrow">
-            <div class="key" id="key-A">A</div><div class="key" id="key-S">S</div><div class="key" id="key-D">D</div><div class="key" id="key-F">F</div><div class="key" id="key-G">G</div><div class="key" id="key-H">H</div><div class="key" id="key-J">J</div><div class="key" id="key-K">K</div><div class="key" id="key-L">L</div>
-        </div>
-        <div class="keyrow">
-            <div class="key wide" data-key="ENTER">ENTER</div>
-            <div class="key" id="key-Z">Z</div><div class="key" id="key-X">X</div><div class="key" id="key-C">C</div><div class="key" id="key-V">V</div><div class="key" id="key-B">B</div><div class="key" id="key-N">N</div><div class="key" id="key-M">M</div>
-            <div class="key wide" data-key="DELETE">⌫</div>
-        </div>
-    </div>
-</div>
 
-<script src="words-answers.js"></script>
-<script src="words-guesses.js"></script>
-<script src="index.js"></script>
+        <p>The Letter <strong>L</strong> is in the word and in the right spot.</p>
+
+        <div class="row">
+            <div class="box">D</div>
+            <div class="box">R</div>
+            <div class="box">I</div>
+            <div class="box">V</div>
+            <div class="box orange">E</div>
+        </div>
+
+        <p>The Letter <strong>E</strong> is in the word but not in the right spot</p>
+
+        <div class="row">
+            <div class="box">L</div>
+            <div class="box">O</div>
+            <div class="box diagonal">V</div>
+            <div class="box">E</div>
+            <div class="box">S</div>
+        </div>
+
+        <p>The letter <strong>V</strong> is in the correct spot AND appears again somewhere else in the word.</p>
+
+        <div class="row">
+            <div class="box gray">A</div>
+            <div class="box">L</div>
+            <div class="box">P</div>
+            <div class="box">H</div>
+            <div class="box">A</div>
+        </div>
+
+        <p>The Letter <strong>A</strong> is not in the word at all</p>
+        <hr>
+
+        <!-- Continue Button -->
+        <div class="btn-container">
+            <a href="game.html" class="play-btn">Play Game</a>
+        </div>
+
+    </div>
+
 </body>
 </html>
